@@ -29,10 +29,10 @@ use Mix.Config
 #
 #     import_config "#{Mix.env}.exs"
 
-config :sample_yahoo_cateogry, SampleYahooCategory.Repo,
+config :sample_yahoo_category, SampleYahooCategory.Repo,
   adapter: Ecto.Adapters.MySQL,
   username: "root",
   password: "",
-  database: "sample_yahoo_cateogry",
+  database: "sample_yahoo_category",
   hostname: "localhost",
   pool_size: 10
