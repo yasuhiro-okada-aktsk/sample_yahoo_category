@@ -8,10 +8,10 @@ defmodule Main do
   alias SampleYahooCategory.YahooCategory
 
   def main do
-    SampleRakutenGenre.Repo.start_link
+    Repo.start_link
 
     {:ok, file} = File.open "output.csv", [:write]
-    print {0, 2, file}
+    print {1, 3, file}
     File.close file
   end
 
@@ -19,19 +19,19 @@ defmodule Main do
     YahooCategory
     |> where([g], g.category_parent == ^parent)
     |> Repo.all
-    |> print_genre({parent, max_depth, file})
+    |> print_category({parent, max_depth, file})
   end
 
-  def print_genre([genre|tl], {parent, max_depth, file}) do
+  def print_category([category|tl], {parent, max_depth, file}) do
 
     line = ""
-    line = for c <- 1..max_depth - 1 do
-      if c > 1 do
+    line = for c <- 2..max_depth do
+      if c > 2 do
         line = line <> ","
       end
 
-      if c == genre.genre_level do
-        line = line <> genre.genre_name
+      if c == category.category_depth do
+        line = line <> category.category_short
       else
         line = line <> " "
       end
@@ -40,15 +40,15 @@ defmodule Main do
     IO.binwrite file, "#{line}\n"
 
     # children
-    unless genre.genre_level == max_level do
-      print {genre.genre_id, max_level, file}
+    unless category.category_depth == max_depth do
+      print {category.category_id, max_depth, file}
     end
 
     # sibling
-    print_genre tl, {parent, max_level, file}
+    print_category tl, {parent, max_depth, file}
   end
 
-  def print_genre([], {parent, max_level, file}) do
+  def print_category([], {parent, max_depth, file}) do
     # noop
   end
 end
